@@ -1,0 +1,19 @@
+version: '2'
+
+services:
+  apiserver:
+    container_name: apiserver
+    image: test_fabric/apiserver
+    restart: always
+    volumes:
+    - ./client_sdk.yaml:/opt/apiserver/client_sdk.yaml
+    - ./crypto-config:/opt/apiserver/crypto-config
+    logging:
+      driver: "json-file"
+      options: 
+        max-size: "50m"
+        max-file: "10"
+    working_dir: /opt/apiserver
+    command: ./apiserver
+    ports:
+     - 8888:8888

@@ -1,0 +1,206 @@
+###############################################################################
+#
+#    LOGGING section
+#
+###############################################################################
+logging:
+
+    # Default logging levels are specified here for each of the three peer
+    # commands 'node', 'network' and 'chaincode'. For commands that have
+    # subcommands, the defaults also apply to all subcommands of the command.
+    # Valid logging levels are case-insensitive strings chosen from
+
+    #     CRITICAL | ERROR | WARNING | NOTICE | INFO | DEBUG
+
+    # The logging levels specified here can be overridden in various ways,
+    # listed below from strongest to weakest:
+    #
+    # 1. The --logging-level=<level> command line option overrides all other
+    #    specifications.
+    #
+    # 2. The environment variable CORE_LOGGING_LEVEL otherwise applies to
+    #    all peer commands if defined as a non-empty string.
+    #
+    # 3. The environment variables CORE_LOGGING_[NODE|NETWORK|CHAINCODE]
+    #    otherwise apply to the respective peer commands if defined as non-empty
+    #    strings.
+    #
+    # 4. Otherwise, the specifications below apply.
+    #
+    # Developers: Please see fabric/docs/Setup/logging-control.md for more
+    # options.
+    peer:       warning
+    node:       warning
+    network:    warning
+    version:    warning
+    protoutils: warning
+    error:      warning
+    msp:        critical
+
+    format: '%{color}%{time:2006-01-02 15:04:05.000 MST} [%{module}] %{shortfunc} -> %{level:.4s} %{id:03x}%{color:reset} %{message}'
+
+###############################################################################
+#
+#    client section
+#
+###############################################################################
+client:
+    tls:
+      enabled: true
+    peers:
+        # peer0
+        - address: "localhost:7051"
+          eventHost: "localhost"
+          eventPort: 7053
+          primary: true
+          localMspId: Org1MSP
+          tls:
+              # Certificate location absolute path
+              certificate: "/opt/gopath/src/github.com/hyperledger/fabric/examples/e2e_cli/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt"
+              serverHostOverride: "peer0"
+#        # peer 1
+#        - address: "localhost:8051"
+#          eventHost: "localhost"
+#          eventPort: 8053
+#          primary: false
+#          localMspId: Org1MSP
+#          tls:
+#              # Certificate location absolute path
+#              certificate: "/opt/gopath/src/github.com/hyperledger/fabric/examples/e2e_cli/crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/tls/ca.crt"
+#              serverHostOverride: "peer1"
+        # peer 2
+        - address: "localhost:9051"
+          eventHost: "localhost"
+          eventPort: 9053
+          primary: false
+          localMspId: Org2MSP
+          tls:
+              # Certificate location absolute path
+              certificate: "/opt/gopath/src/github.com/hyperledger/fabric/examples/e2e_cli/crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt"
+              serverHostOverride: "peer0"
+#        # peer 3
+#        - address: "localhost:10051"
+#          eventHost: "localhost"
+#          eventPort: 10053
+#          primary: false
+#          localMspId: Org2MSP
+#          tls:
+#              # Certificate location absolute path
+#              certificate: "/opt/gopath/src/github.com/hyperledger/fabric/examples/e2e_cli/crypto-config/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/tls/ca.crt"
+#              serverHostOverride: "peer1"
+
+    orderer:
+      - address: "0.0.0.0:7050"
+        tls:
+            # Certificate location absolute path
+            certificate: "/opt/gopath/src/github.com/hyperledger/fabric/examples/e2e_cli/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem"
+            serverHostOverride: "orderer"
+ 
+    couchDBConfig:
+         couchDbs:
+           - couchDBAddress: 127.0.0.1:5984
+             username:
+             password:
+#           - couchDBAddress: 127.0.0.1:6984
+#             username:
+#             password:
+#           - couchDBAddress: 127.0.0.1:7984
+#             username:
+#             password:
+#           - couchDBAddress: 127.0.0.1:8984
+#             username:
+#             password:
+         # Number of retries for CouchDB errors
+         maxRetries: 3
+         # Number of retries for CouchDB errors during peer startup
+         maxRetriesOnStartup: 10
+         # CouchDB request timeout (unit: duration, e.g. 20s)
+         requestTimeout: 35s
+###############################################################################
+#
+#    Peer section
+#
+###############################################################################
+peer:
+    # The Address this Peer will listen on
+    listenAddress: 0.0.0.0:7053
+
+    # Setting for runtime.GOMAXPROCS(n). If n < 1, it does not change the current setting
+    gomaxprocs: -1
+    workers: 2
+
+    # TLS Settings for p2p communications
+    tls:
+        enabled: true
+        rootcert:
+            file: /opt/gopath/src/github.com/hyperledger/fabric/examples/e2e_cli/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
+        # The server name use to verify the hostname returned by TLS handshake
+        serverhostoverride: peer0
+
+    # BCCSP (Blockchain crypto provider): Select which crypto implementation or
+    # library to use
+    BCCSP:
+        Default: SW
+        SW:
+            # TODO: The default Hash and Security level needs refactoring to be
+            # fully configurable. Changing these defaults requires coordination
+            # SHA2 is hardcoded in several places, not only BCCSP
+            Hash: SHA2
+            Security: 256
+            # Location of Key Store, can be subdirectory of SbftLocal.DataDir
+            FileKeyStore:
+                # If "", defaults to 'mspConfigPath'/keystore
+                # TODO: Ensure this is read with fabric/core/config.GetPath() once ready
+                KeyStore:
+
+    # Path on the file system where peer will find MSP local configurations
+    mspConfigPath: /opt/gopath/src/github.com/hyperledger/fabric/examples/e2e_cli/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
+
+    # Identifier of the local MSP
+    # ----!!!!IMPORTANT!!!-!!!IMPORTANT!!!-!!!IMPORTANT!!!!----
+    # Deployers need to change the value of the localMspId string.
+    # In particular, the name of the local MSP ID of a peer needs
+    # to match the name of one of the MSPs in each of the channel
+    # that this peer is a member of. Otherwise this peer's messages
+    # will not be identified as valid by other nodes.
+    localMspId: Org1MSP
+
+###############################################################################
+#
+#    Chaincode section
+#
+###############################################################################
+chaincode:
+
+    # The id is used by the Chaincode stub to register the executing Chaincode
+    # ID with the Peerand is generally supplied through ENV variables
+    # the Path form of ID is provided when deploying the chaincode. The name is
+    # used for all other requests. The name is really a hashcode
+    # returned by the system in response to the deploy transaction. In
+    # development mode where user runs the chaincode, the name can be any string
+    id:
+        path: github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02
+        name: factor
+        version: "1.0"
+        chainID: mychannel
+        policy: "OR('Org1MSP.member','Org2MSP.member')"
+
+
+user:
+    #The alias should not be changed manually, unless you know what it means.
+    #And the file can not have another alias in other fileds.
+    alias: zhengfu1
+
+apiserver:
+    listenport: 8888
+    probe_order: "127.0.0.1 7050"
+
+###############################################################################
+#
+#    other section
+#
+###############################################################################
+other:
+    mq_address: "amqp://guest:guest@localhost:5672/"
+    queue_name: "factoring_listener"
+    system_queue_name: "factoring_system"

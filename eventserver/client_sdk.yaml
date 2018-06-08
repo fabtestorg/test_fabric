@@ -1,0 +1,45 @@
+---
+crypto:
+  family: ecdsa
+  algorithm: P256-SHA256
+  hash: SHA2-256
+orderers:
+  orderer0:
+    host: 127.0.0.1:7050
+    useTLS: false
+    tlsPath: ./crypto-config/ordererOrganizations/ord1.example.com/orderers/orderer.ord1.example.com/tls/server.crt
+#  orderer1:
+#    host: 127.0.0.1:7048
+#    useTLS: false
+#    tlsPath: /path/to/tls/server.pem
+peers:
+  peer0:
+    host: 127.0.0.1:7051
+    orgname: org1
+    useTLS: false
+    tlsPath: ./crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/server.crt
+#  peer1:
+#    host: 127.0.0.1:8051
+#    useTLS: false
+    tlsPath: ./crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/tls/server.crt
+eventPeers:
+  peer0:
+    host: 127.0.0.1:7051
+    orgname: org1
+    useTLS: false
+    tlsPath: ./crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/server.crt
+other:
+    mspConfigPath: ./crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
+    localMspId:          Org1MSP
+    channelId:           mychannel
+    chaincodeName:       testfabric
+    chaincodeVersion:    1.0
+    mq_address:
+      - "amqp://guest:guest@localhost:5672/"
+    queue_name: "assetQueue"
+policy:
+    orgs: org1 org2
+    rule: or
+
+user:
+    alias: zhengfu1
