@@ -167,7 +167,9 @@ func FilterEvent(event *gohfc.EventBlockResponseTransactionEvent) (interface{}, 
 			logger.Error(err)
 			return nil, false
 		} else {
-			fmt.Printf("the during -- %d\n",getCurTime() - message.CreateTime)
+			//fmt.Printf("the during c -- %d\n",message.CreateTime)
+			//fmt.Printf("the during g-- %d\n",getCurTime())
+			fmt.Println(getCurTime() - message.CreateTime/1000)
 			err = utils.FormatResponseMessage(userAlias, &payload, &[]define.Message{message})
 			if err != nil {
 				if !strings.Contains(err.Error(), "receiver") {

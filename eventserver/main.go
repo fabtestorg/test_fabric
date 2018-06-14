@@ -47,7 +47,7 @@ func main() {
 	}
 
 	handle.SetUserAliasWithFile(userAlias)
-
+	fmt.Printf("--chainId %s\n",chainID)
 	if !handle.GetBlockHeight(chainID) {
 		logger.Panic("Get block height failed!")
 	}

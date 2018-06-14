@@ -128,7 +128,7 @@ func GetBlockByNumber(chainId string, blockNum uint64) (*common.Block, error) {
 
 func GetBlockHeight(chainId string) bool {
 	args := []string{qscc.GetChainInfo, chainId}
-	resps, err := gohfc.GetHandler().QueryByQscc(args, []string{"peer0"})
+	resps, err := gohfc.GetHandler().QueryByQscc(args, []string{"peer"})
 	if err != nil {
 		fmt.Errorf("%v",err)
 		return false
