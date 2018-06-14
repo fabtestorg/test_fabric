@@ -154,7 +154,7 @@ func (e *EventListener) SeekRange(start, end uint64) error {
 func (e *EventListener) Listen(response chan<- EventBlockResponse) {
 	go func() {
 		for {
-			fmt.Println("---start--Listen.Recv--------")
+			//fmt.Println("---start--Listen.Recv--------")
 			msg, err := e.client.Recv()
 			if err != nil {
 				fmt.Println("-----Listen.Recv err--------", err)
@@ -163,9 +163,9 @@ func (e *EventListener) Listen(response chan<- EventBlockResponse) {
 			}
 			switch t := msg.Type.(type) {
 			case *peer.DeliverResponse_Block:
-				fmt.Println("--start response---block height---",t.Block.Header.Number)
+				//fmt.Println("--start response---block height---",t.Block.Header.Number)
 				response <- *e.parseFullBlock(t, e.FullBlock)
-				fmt.Println("----insert response  end-------")
+				//fmt.Println("----insert response  end-------")
 			case *peer.DeliverResponse_FilteredBlock:
 				response <- *e.parseFilteredBlock(t, e.FullBlock)
 			}
@@ -300,7 +300,6 @@ func (e *EventListener) parseFullBlock(block *peer.DeliverResponse_Block, fullBl
 		}
 		response.Transactions = append(response.Transactions, transaction)
 	}
-	fmt.Println("----parseFullBlock end---")
 	return response
 }
 

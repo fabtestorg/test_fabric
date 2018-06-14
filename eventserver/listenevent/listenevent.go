@@ -22,7 +22,7 @@ func ListenEvent(eventAddress, chainID string, filterHandler FilterHandler, toHa
 	for {
 		select {
 		case b := <-notfy:
-			fmt.Println("----read response----no: ",b.BlockHeight)
+			//fmt.Println("----read response----no: ",b.BlockHeight)
 			for _, r := range b.Transactions {
 				//filter msg from chiancode event
 				if len(r.Events) == 0 {
