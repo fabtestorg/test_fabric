@@ -22,23 +22,24 @@ func ListenEvent(eventAddress, chainID string, filterHandler FilterHandler, toHa
 	for {
 		select {
 		case b := <-notfy:
-			for txIndex, r := range b.Transactions {
+			fmt.Println("----read response----no: ",b.BlockHeight)
+			for _, r := range b.Transactions {
 				//filter msg from chiancode event
 				if len(r.Events) == 0 {
 					continue
 				}
-				//fmt.Printf("----event----%s\n",r.Events[0].Value)
-				msg, ok := filterHandler(&r.Events[0])
-				//send msg/blockNum/txIndex to handle module
-				if ok {
-					//fmt.Printf("---blockHeight = %d ---txIndex = %d---\n",b.BlockHeight,txIndex)
-					blockInfo := handle.BlockInfoAll{
-						BlockInfo: handle.BlockInfo{Block_number: b.BlockHeight,
-							Tx_index: txIndex},
-						MsgInfo: msg,
-					}
-					toHandle <- blockInfo
-				}
+				filterHandler(&r.Events[0])
+				//msg, ok := filterHandler(&r.Events[0])
+				////send msg/blockNum/txIndex to handle module
+				//if ok {
+				//	//fmt.Printf("---blockHeight = %d ---txIndex = %d---\n",b.BlockHeight,txIndex)
+				//	blockInfo := handle.BlockInfoAll{
+				//		BlockInfo: handle.BlockInfo{Block_number: b.BlockHeight,
+				//			Tx_index: txIndex},
+				//		MsgInfo: msg,
+				//	}
+				//	toHandle <- blockInfo
+				//}
 			}
 		}
 	}

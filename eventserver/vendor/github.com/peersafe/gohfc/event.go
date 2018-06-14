@@ -300,7 +300,7 @@ func (e *EventListener) parseFullBlock(block *peer.DeliverResponse_Block, fullBl
 		}
 		response.Transactions = append(response.Transactions, transaction)
 	}
-
+	fmt.Println("----parseFullBlock end---")
 	return response
 }
 
