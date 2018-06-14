@@ -169,7 +169,7 @@ func FilterEvent(event *gohfc.EventBlockResponseTransactionEvent) (interface{}, 
 		} else {
 			//fmt.Printf("the during c -- %d\n",message.CreateTime)
 			//fmt.Printf("the during g-- %d\n",getCurTime())
-			fmt.Println(getCurTime()*1000 - message.CreateTime)
+			fmt.Println(getCurTime() - message.CreateTime)
 			err = utils.FormatResponseMessage(userAlias, &payload, &[]define.Message{message})
 			if err != nil {
 				if !strings.Contains(err.Error(), "receiver") {
@@ -207,5 +207,5 @@ func FilterEvent(event *gohfc.EventBlockResponseTransactionEvent) (interface{}, 
 
 //获取当前时间
 func getCurTime() uint64 {
-	return uint64(time.Now().UTC().Unix())
+	return uint64(time.Now().UTC().UnixNano()/1000000)
 }
