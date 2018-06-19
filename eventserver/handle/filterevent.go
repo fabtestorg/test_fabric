@@ -167,12 +167,13 @@ func FilterEvent(event *gohfc.EventBlockResponseTransactionEvent) (interface{}, 
 			logger.Error(err)
 			return nil, false
 		} else {
-			//fmt.Printf("the during c -- %d\n",message.CreateTime)
-			//fmt.Printf("the during g-- %d\n",getCurTime())
 			if getCurTime() > message.CreateTime {
 				fmt.Println(getCurTime() - message.CreateTime)
 			}else {
-				fmt.Println(message.CreateTime - getCurTime())
+				fmt.Printf("the during CreateTime -- %d\n",message.CreateTime)
+				fmt.Printf("the during getCurTime-- %d\n",getCurTime())
+				fmt.Printf("the during getCurTime.ns-- %d\n",time.Now().UTC().UnixNano())
+				//fmt.Println(message.CreateTime - getCurTime())
 			}
 			err = utils.FormatResponseMessage(userAlias, &payload, &[]define.Message{message})
 			if err != nil {
